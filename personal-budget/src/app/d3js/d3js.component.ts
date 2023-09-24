@@ -31,8 +31,7 @@ export class D3jsComponent {
   private color: any;
   private height = 450;
   private width = 960;
-  private margin = 50;
-  private radius = Math.min(this.width, this.height) / 2 - this.margin;
+  private radius = Math.min(this.width, this.height) / 2;
 
 constructor(private dataService : DataService) {}
 
@@ -68,9 +67,8 @@ private generateChart(): void{
       const pie = d3j.pie<any>().value((d: any) => Number(d.budget));
 
 
-      // Build the pie chart
       this.svg
-        .selectAll('pieces')
+        .selectAll('p')
         .data(pie(this.data))
         .enter()
         .append('path')
@@ -79,21 +77,20 @@ private generateChart(): void{
         .attr('stroke', '#FFFFFF')
         .style('stroke-width', '1px');
 
-      // Add labels
-      const labelLocation = d3j.arc().innerRadius(100).outerRadius(this.radius);
+
+      const labelArc = d3j.arc()
+        .innerRadius(this.radius - 30)
+        .outerRadius(this.radius - 30);
 
       this.svg
-        .selectAll('pieces')
+        .selectAll('p')
         .data(pie(this.data))
         .enter()
         .append('text')
         .text((d: any) => d.data.title)
-        .attr(
-          'transform',
-          (d: any) => 'translate(' + labelLocation.centroid(d) + ')'
-        )
+        .attr('transform', (d: any) => 'translate(' + labelArc.centroid(d) + ')')
         .style('text-anchor', 'middle')
-        .style('font-size', 15);
+        .style('font-size', 12);
 
 
 }

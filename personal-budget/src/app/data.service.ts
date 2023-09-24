@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,10 @@ export class DataService {
   constructor(private http: HttpClient) {}
   // ngOnInit(): void {
   generateData(){
-    return this.http.get('http://localhost:3000/budget');}
+    if(this.dataSource.datasets[0].data.length === 0){
+      return this.http.get('http://localhost:3000/budget');
+    }else{
+      return of(this.dataSource);
+    }
+  }
 }
